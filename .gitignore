@@ -1,0 +1,12 @@
+# ignoring client_secret and all other json files
+client_secret.json
+*.json
+
+# ignoring env
+.env
+.env*
+
+# common osx gitignore files
+.DS_Store
+
+
