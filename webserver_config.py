@@ -12,11 +12,11 @@ from flask_oidc import OpenIDConnect
 logger = logging.getLogger(__name__)
 
 # Set the OIDC field that should be used
-NICKNAME_OIDC_FIELD = 'nickname'
-FULL_NAME_OIDC_FIELD = 'name'
-GROUPS_OIDC_FIELD = 'groups'
-EMAIL_FIELD = 'email'
-SUB_FIELD = 'sub'  # User ID
+NICKNAME_OIDC_FIELD = os.getenv('NICKNAME_OIDC_FIELD', 'nickname')
+FULL_NAME_OIDC_FIELD = os.getenv('FULL_NAME_OIDC_FIELD', 'name')
+GROUPS_OIDC_FIELD = os.getenv('GROUPS_OIDC_FIELD', 'groups')
+EMAIL_FIELD = os.getenv('EMAIL_FIELD', 'email')
+SUB_FIELD = os.getenv('SUB_FIELD', 'sub')  # User ID
 
 
 # Convert groups from comma separated string to list
@@ -148,7 +148,7 @@ SQLALCHEMY_DATABASE_URI = conf.get('core', 'SQL_ALCHEMY_CONN')
 CSRF_ENABLED = True
 
 AUTH_TYPE = AUTH_OID
-OIDC_CLIENT_SECRETS = 'client_secret.json'  # Configuration file for Gitlab OIDC
+OIDC_CLIENT_SECRETS = os.getenv('OIDC_CLIENT_SECRETS', 'client_secret.json')  # Configuration file for Gitlab OIDC
 OIDC_COOKIE_SECURE= False
 OIDC_ID_TOKEN_COOKIE_SECURE = False
 OIDC_REQUIRE_VERIFIED_EMAIL = False
@@ -168,6 +168,8 @@ GITLAB_OIDC_URL = OIDC_APPCONFIG.get('web', {}).get('issuer')
 if not GITLAB_OIDC_URL:
     raise ValueError('Invalid OIDC client configuration, GitLab OIDC URI not specified.')
 
+
+# this will change based on the OIDC provider
 OIDC_SCOPES = OIDC_APPCONFIG.get('OIDC_SCOPES', ['openid', 'email', 'profile'])  # Scopes that should be requested.
 OIDC_LOGOUT_URI = posixpath.join(GITLAB_OIDC_URL, 'oauth/revoke') # OIDC logout URL
 

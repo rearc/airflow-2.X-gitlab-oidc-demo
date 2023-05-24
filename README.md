@@ -1,0 +1,1 @@
+TODO extract setup steps from google doc writeup
