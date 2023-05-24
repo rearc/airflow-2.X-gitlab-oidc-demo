@@ -168,11 +168,9 @@ GITLAB_OIDC_URL = OIDC_APPCONFIG.get('web', {}).get('issuer')
 if not GITLAB_OIDC_URL:
     raise ValueError('Invalid OIDC client configuration, GitLab OIDC URI not specified.')
 
-
 # this will change based on the OIDC provider
 OIDC_SCOPES = OIDC_APPCONFIG.get('OIDC_SCOPES', ['openid', 'email', 'profile'])  # Scopes that should be requested.
 OIDC_LOGOUT_URI = posixpath.join(GITLAB_OIDC_URL, 'oauth/revoke') # OIDC logout URL
-
 
 # Allow user self registration
 AUTH_USER_REGISTRATION = False
@@ -182,7 +180,6 @@ AUTH_USER_REGISTRATION_ROLE = os.environ.get('AUTH_USER_REGISTRATION_ROLE', 'Pub
 
 AUTH_ROLE_ADMIN = 'Admin'
 AUTH_ROLE_PUBLIC = "Public"
-
 
 OPENID_PROVIDERS = [
    {'name': 'Gitlab', 'url': posixpath.join(GITLAB_OIDC_URL, 'oauth/authorize')}
