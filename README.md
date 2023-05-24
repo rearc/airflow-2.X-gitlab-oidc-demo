@@ -43,6 +43,6 @@ airflow users add-role -u <USERNAME> -r Admin
 ```
 Which when combined with the value from the table above, becomes:
 ```
-airflow users add-role -u <USERNAME> -r Admin
+airflow users add-role -u mark.degroat -r Admin
 ```
 9. Refresh the page, and you should now see the Airflow dashboard, logged in as the user shown above with Admin permissions.
