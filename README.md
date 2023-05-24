@@ -1,4 +1,4 @@
-#OIDC Authentication for Airflow Local Example Setup
+# OIDC Authentication for Airflow Local Example Setup
 
 1. Clone repo down to local machine, docker is required locally to run the containers/ launch the docker compose services.
 2. Rename .example.env to .env, and fill in appropriate details.
