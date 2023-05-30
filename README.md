@@ -1,4 +1,4 @@
-#OIDC Authentication for Airflow Local Example Setup
+# OIDC Authentication for Airflow Local Example Setup
 
 1. Clone repo down to local machine, docker is required locally to run the containers/ launch the docker compose services.
 2. Rename .example.env to .env, and fill in appropriate details.
@@ -43,6 +43,6 @@ airflow users add-role -u <USERNAME> -r Admin
 ```
 Which when combined with the value from the table above, becomes:
 ```
-airflow users add-role -u <USERNAME> -r Admin
+airflow users add-role -u mark.degroat -r Admin
 ```
 9. Refresh the page, and you should now see the Airflow dashboard, logged in as the user shown above with Admin permissions.
