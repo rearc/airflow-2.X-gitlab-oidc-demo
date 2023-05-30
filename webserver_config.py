@@ -20,14 +20,14 @@ SUB_FIELD = os.getenv('SUB_FIELD', 'sub')  # User ID
 
 
 # Convert groups from comma separated string to list
-ALLOWED_GITLAB_GROUPS = os.environ.get('ALLOWED_GITLAB_GROUPS')
-if ALLOWED_GITLAB_GROUPS:
-    ALLOWED_GITLAB_GROUPS = [g.strip() for g in ALLOWED_GITLAB_GROUPS.split(',')]
-else: ALLOWED_GITLAB_GROUPS = []
+ALLOWED_PROVIDER_GROUPS = os.environ.get('ALLOWED_PROVIDER_GROUPS')
+if ALLOWED_PROVIDER_GROUPS:
+    ALLOWED_PROVIDER_GROUPS = [g.strip() for g in ALLOWED_PROVIDER_GROUPS.split(',')]
+else: ALLOWED_PROVIDER_GROUPS = []
 
-if ALLOWED_GITLAB_GROUPS:
+if ALLOWED_PROVIDER_GROUPS:
     logger.debug('AirFlow access requires membership to one of the following groups: %s'
-        % ', '.join(ALLOWED_GITLAB_GROUPS))
+        % ', '.join(ALLOWED_PROVIDER_GROUPS))
 
 
 # Extending AuthOIDView
@@ -44,11 +44,11 @@ class AuthOIDCView(AuthOIDView):
             user = sm.auth_user_oid(oidc.user_getfield(EMAIL_FIELD))
 
             # Group membership required
-            if ALLOWED_GITLAB_GROUPS:
+            if ALLOWED_PROVIDER_GROUPS:
 
-                # Fetch group membership information from GitLab
+                # Fetch group membership information from OIDC provider
                 groups = oidc.user_getinfo([GROUPS_OIDC_FIELD]).get(GROUPS_OIDC_FIELD, [])
-                intersection = set(ALLOWED_GITLAB_GROUPS) & set(groups)
+                intersection = set(ALLOWED_PROVIDER_GROUPS) & set(groups)
                 logger.debug('AirFlow user member of groups in ACL list: %s' % ', '.join(intersection))
 
                 # Unable to find common groups, prevent login
@@ -148,7 +148,7 @@ SQLALCHEMY_DATABASE_URI = conf.get('core', 'SQL_ALCHEMY_CONN')
 CSRF_ENABLED = True
 
 AUTH_TYPE = AUTH_OID
-OIDC_CLIENT_SECRETS = os.getenv('OIDC_CLIENT_SECRETS', 'client_secret.json')  # Configuration file for Gitlab OIDC
+OIDC_CLIENT_SECRETS = os.getenv('OIDC_CLIENT_SECRETS', 'client_secret.json')  # Configuration file for OIDC provider OIDC
 OIDC_COOKIE_SECURE= False
 OIDC_ID_TOKEN_COOKIE_SECURE = False
 OIDC_REQUIRE_VERIFIED_EMAIL = False
@@ -164,13 +164,14 @@ with open(OIDC_CLIENT_SECRETS) as f:
     OIDC_APPCONFIG = json.loads(f.read())
 
 # Ensure that the logout/revoke URL is specified in the client secrets file
-GITLAB_OIDC_URL = OIDC_APPCONFIG.get('web', {}).get('issuer')
-if not GITLAB_OIDC_URL:
-    raise ValueError('Invalid OIDC client configuration, GitLab OIDC URI not specified.')
+PROVIDER_OIDC_URL = OIDC_APPCONFIG.get('web', {}).get('issuer')
+OIDC_PROVIDER_NAME = OIDC_APPCONFIG.get('web', {}).get('name')
+if not PROVIDER_OIDC_URL:
+    raise ValueError('Invalid OIDC client configuration, OIDC provider OIDC URI not specified.')
 
 # this will change based on the OIDC provider
 OIDC_SCOPES = OIDC_APPCONFIG.get('OIDC_SCOPES', ['openid', 'email', 'profile'])  # Scopes that should be requested.
-OIDC_LOGOUT_URI = posixpath.join(GITLAB_OIDC_URL, 'oauth/revoke') # OIDC logout URL
+OIDC_LOGOUT_URI = posixpath.join(PROVIDER_OIDC_URL, 'oauth/revoke') # OIDC logout URL
 
 # Allow user self registration
 AUTH_USER_REGISTRATION = False
@@ -182,5 +183,5 @@ AUTH_ROLE_ADMIN = 'Admin'
 AUTH_ROLE_PUBLIC = "Public"
 
 OPENID_PROVIDERS = [
-   {'name': 'Gitlab', 'url': posixpath.join(GITLAB_OIDC_URL, 'oauth/authorize')}
+   {'name': OIDC_PROVIDER_NAME, 'url': posixpath.join(PROVIDER_OIDC_URL, 'oauth/authorize')}
 ]
