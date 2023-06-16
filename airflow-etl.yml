@@ -21,7 +21,7 @@ x-airflow-common:
     
     # Comma separated list of GitLab groups that the user should be a member of
     # in order to be able to access AirFlow. Uncomment to enable.
-    ALLOWED_GITLAB_GROUPS: 'fd_main'
+    ALLOWED_PROVIDER_GROUPS: 'fd_main2'
 
   volumes:
   - ./client_secret.json:/opt/airflow/client_secret.json:ro
