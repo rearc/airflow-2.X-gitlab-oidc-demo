@@ -124,7 +124,7 @@ OIDC_CLIENT_SECRETS is where our client_secret.json is located, and what it is n
 
 ****************************************************webserver_config.py Changes and Overview****************************************************
 
-This file is where we are going to modify some constants that Airflow uses in order to configure itself,  extend the AuthOIDView from FAB to check auth and if the user belongs to the correct group on login, and revoking token on logout - then also defining a custom ODICSecurityManager class where we configure airflow to use OpenIDConnect, and use our new extended version of AuthOIDView in place of the legacy one.
+This file is where we are going to modify some constants that Airflow uses in order to configure itself,  extend the AuthOIDView from FAB to check auth and if the user belongs to the correct group on login, and revoking token on logout - then also defining a custom OIDCSecurityManager class where we configure airflow to use OpenIDConnect, and use our new extended version of AuthOIDView in place of the legacy one.
 
 ```python
 import os, logging, json, posixpath
